@@ -190,13 +190,19 @@ isolates <- sna::isolates(friendship_network)
 network::delete.vertices(friendship_network, isolates)
 
 friendship_model <- ergm(friendship_network~ edges+
-                           F(~transitiveties,  ~nodefactor(~sex=="1")) +
-                           F(~transitiveties,  ~nodefactor(~sex=="2")) +
+                           gwesp(log(2), fixed = T) +
+                           gwdegree(log(2), fixed = T) +
                            nodematch("grade")+
                            nodematch("race")+
                            nodematch("sex"))
-
 summary(friendship_model)
+friendship_gof <- gof(friendship_model)
+
+friendship_gof$bds.deg
+pdf("gof_friendship.pdf")
+plot(friendship_gof,main = "")
+dev.off()
+
 friendship_network %v% "deg_log_log" = log(log(sna::degree(friendship_network)))
 
 pdf("network_friendship.pdf",width = 20,height= 20)
