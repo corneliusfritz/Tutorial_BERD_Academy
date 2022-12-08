@@ -16,11 +16,11 @@ library(intergraph)
 # 1. ER Simulations ----
 set.seed(123)
 g <- erdos.renyi.game(50, 1/2)
-pdf("example_er_0_5.pdf")
+pdf("Plots/example_er_0_5.pdf")
 plot(g)
 dev.off()
 g <- erdos.renyi.game(50, 1/10)
-pdf("example_er_0_1.pdf")
+pdf("Plots/example_er_0_1.pdf")
 plot(g)
 dev.off()
 
@@ -30,12 +30,12 @@ dev.off()
 set.seed(13)
 n_actors <- 50
 x <- abs(rnorm(n = n_actors))
-pdf("density_x.pdf")
+pdf("Plots/density_x.pdf")
 plot(density(x, from = 0), main = "", xlab = "x Values")
 dev.off()
 x_cov <- outer(x,x,function(x,y) { abs(x-y)})
 cov_tmp <- graph_from_adjacency_matrix(x_cov, mode = "undirected", weighted = T)
-pdf("covs.pdf")
+pdf("Plots/covs.pdf")
 plot(cov_tmp, edge.width = E(cov_tmp)$weight*0.4,vertex.size = x*5)
 dev.off()
 
@@ -43,14 +43,14 @@ expit <- function(x) {exp(x)/(1+exp(x))}
 network_mat <- matrix(rbinom(n = length(x_cov), size = 1, prob = expit(-2- x_cov)),nrow = n_actors)
 diag(network_mat) <- NA
 network_tmp <- graph_from_adjacency_matrix(network_mat, mode = "undirected")
-pdf("net_pos.pdf")
+pdf("Plots/net_pos.pdf")
 plot(network_tmp, vertex.size = x*5)
 
 dev.off()
 network_mat <- matrix(rbinom(n = length(x_cov), size = 1, prob = expit(-6+ 4*x_cov)),nrow = n_actors)
 diag(network_mat) <- NA
 network_tmp <- graph_from_adjacency_matrix(network_mat, mode = "undirected")
-pdf("net_neg.pdf")
+pdf("Plots/net_neg.pdf")
 plot(network_tmp, vertex.size = x*5)
 dev.off()
 
@@ -60,7 +60,7 @@ set.seed(2)
 sim_net <- simulate(network(50,directed = F,loops = F) ~ edges, coef=c(-2))
 ig2 <- intergraph::asIgraph(sim_net)
 plot(ig2)
-pdf("degreedist_er.pdf")
+pdf("Plots/degreedist_er.pdf")
 sum_net <- summary(sim_net ~ degree(c(0:10)))
 plot(y = sum_net, x = 0:10, xlab = "Degree", ylab = "Absolute Frequency", type = "b")
 dev.off()
@@ -71,7 +71,7 @@ sim_net <- erdos.renyi.game(n_actors, pi)
 degree_dist_tmp = degree_distribution(sim_net)
 x = 0:(length(degree_dist_tmp)-1)
 
-pdf("degreedist_er_exact.pdf")
+pdf("Plots/degreedist_er_exact.pdf")
 plot(x = x,
      degree_dist_tmp*n_actors, xlab = "Degree",
      ylab = "Absolute Frequency", type = "b")
@@ -79,7 +79,7 @@ legend(x = 15, y = 1000,legend = c("Observed", "Expected"),
        col = c("black", "red"),lty = c(1,1))
 dev.off()
 
-pdf("degreedist_er_approx.pdf")
+pdf("Plots/degreedist_er_approx.pdf")
 plot(x = x,
      degree_dist_tmp*n_actors, xlab = "Degree",
      ylab = "Absolute Frequency", type = "b")
@@ -93,10 +93,10 @@ dev.off()
 set.seed(123)
 sim_net <- simulate(network(50,directed = F,loops = F) ~ edges + degree(2), coef=c(-2, 2))
 ig2 <- intergraph::asIgraph(sim_net)
-pdf("net_degree_2.pdf")
+pdf("Plots/net_degree_2.pdf")
 plot(ig2)
 dev.off()
-pdf("degreedist_2.pdf")
+pdf("Plots/degreedist_2.pdf")
 sum_net <- summary(sim_net ~ degree(c(0:10)))
 plot(y = sum_net, x = 0:10, xlab = "Degree", ylab = "Absolute Frequency", type = "b")
 dev.off()
@@ -104,10 +104,10 @@ dev.off()
 set.seed(2)
 sim_net <- simulate(network(50,directed = F,loops = F) ~ edges + degree(c(0:10)), coef=c(-1, seq(11,-1,length.out = 11)))
 ig2 <- intergraph::asIgraph(sim_net)
-pdf("net_degree_25.pdf")
+pdf("Plots/net_degree_25.pdf")
 plot(ig2)
 dev.off()
-pdf("degreedist_25.pdf")
+pdf("Plots/degreedist_25.pdf")
 sum_net <- summary(sim_net ~ degree(c(0:10)))
 plot(y = sum_net, x = 0:10, xlab = "Degree", ylab = "Absolute Frequency", type = "b")
 dev.off()
@@ -115,10 +115,10 @@ dev.off()
 set.seed(123)
 sim_net <- simulate(network(50,directed = F,loops = F) ~ edges + esp(c(2)), coef=c(-3, 2.5))
 ig2 <- intergraph::asIgraph(sim_net)
-pdf("net_esp_25.pdf")
+pdf("Plots/net_esp_25.pdf")
 plot(ig2)
 dev.off()
-pdf("espdist_25.pdf")
+pdf("Plots/espdist_25.pdf")
 sum_net <- summary(sim_net ~ esp(c(0:10)))
 plot(x = 0:10, y = sum_net, xlab = "Edgewise Shared Partners", ylab = "Absolute Frequency", type = "b")
 dev.off()
@@ -126,10 +126,10 @@ dev.off()
 set.seed(123)
 sim_net <- simulate(network(50,directed = F,loops = F) ~ edges + dsp(c(2)), coef=c(-3, 2.5))
 ig2 <- intergraph::asIgraph(sim_net)
-pdf("net_esp_25.pdf")
+pdf("Plots/net_esp_25.pdf")
 plot(ig2)
 dev.off()
-pdf("espdist_25.pdf")
+pdf("Plots/espdist_25.pdf")
 sum_net <- summary(sim_net ~ dsp(c(0:10)))
 plot(x = 0:10, y = sum_net, xlab = "Edgewise Shared Partners", ylab = "Absolute Frequency", type = "b")
 dev.off()
@@ -149,7 +149,7 @@ for(i in 1:length(values_triangle)) {
   exp_edges[i] = tmp[1]
   exp_triangle[i] = tmp[2]
 }
-pdf("degeneracy_example.pdf",width = 12)
+pdf("Plots/degeneracy_example.pdf",width = 12)
 par(mfrow = c(1,2))
 plot(values_triangle,exp_triangle, type = "l", xlab = expression(theta["2-star"]),
      ylab = "Expected 2-star statistics")
@@ -165,13 +165,13 @@ sim_net2 <- simulate(network(50,directed = F,loops = F) ~ edges + kstar(c(2)),
                      coef=c(-3,0.1))
 ig2 <- intergraph::asIgraph(sim_net2)
 
-pdf("degeneracy_picture.pdf",width = 12)
+pdf("Plots/degeneracy_picture.pdf",width = 12)
 par(mfrow = c(1,2))
 plot(ig1, main = expression(paste(theta["2-star"],"= 0.05")))
 plot(ig2, main = expression(paste(theta["2-star"],"= 0.1")))
 dev.off()
 
-pdf("net_esp_25.pdf")
+pdf("Plots/net_esp_25.pdf")
 plot(ig2)
 dev.off()
 
@@ -199,26 +199,16 @@ summary(friendship_model)
 friendship_gof <- gof(friendship_model)
 
 friendship_gof$bds.deg
-pdf("gof_friendship.pdf")
+pdf("Plots/gof_friendship.pdf")
 plot(friendship_gof,main = "")
 dev.off()
 
 friendship_network %v% "deg_log_log" = log(log(sna::degree(friendship_network)))
 
-pdf("network_friendship.pdf",width = 20,height= 20)
+pdf("Plots/network_friendship.pdf",width = 20,height= 20)
 set.seed(243)
 plot(friendship_network,
      mode = "kamadakawai",
      vertex.cex =friendship_network %v% "deg_log_log",
      vertex.col=friendship_network %v% "grade")
 dev.off()
-# 7. Self example of applying the ERGM ----
-
-help("ergm-terms")
-data(UKfaculty)
-faculty <- intergraph::asNetwork(UKfaculty)
-faculty_mat <- symmetrize(faculty, rule="weak")
-faculty_network <- network(faculty_mat, directed = F)
-faculty_network %v% "group" <- faculty %v% "Group"
-faculty_network %v% "wealth" <- exp(rnorm(n = length(faculty %v% "Group")))
-saveRDS(object = faculty_network, file = "faculty_network.RDS")
